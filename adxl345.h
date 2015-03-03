@@ -23,7 +23,6 @@
  #include "WProgram.h"
 #endif
 
-#include <Adafruit_Sensor.h>
 #include <Wire.h>
 
 /*=========================================================================
@@ -103,32 +102,43 @@ typedef enum
   ADXL345_RANGE_2_G           = 0b00    // +/- 2g (default value)
 } range_t;
 
-class Adafruit_ADXL345_Unified : public Adafruit_Sensor {
+/* Used to switch communication mode */
+typedef enum 
+{
+  _SPI                        = 0,
+  _I2C                        = 1
+} commMode_t;
+
+class adxl345
+{
  public:
-  Adafruit_ADXL345_Unified(int32_t sensorID = -1);
-  Adafruit_ADXL345_Unified(uint8_t clock, uint8_t miso, uint8_t mosi, uint8_t cs, int32_t sensorID = -1);
+  adxl345(commMode_t mode);
 
   bool       begin(void);
   void       setRange(range_t range);
   range_t    getRange(void);
   void       setDataRate(dataRate_t dataRate);
   dataRate_t getDataRate(void);
-  void       getEvent(sensors_event_t*);
-  void       getSensor(sensor_t*);
-
+  void       setOffset(void);
+  void       setCS(uint8_t pinCS);
   uint8_t    getDeviceID(void);
   void       writeRegister(uint8_t reg, uint8_t value);
   uint8_t    readRegister(uint8_t reg);
   int16_t    read16(uint8_t reg);
 
   int16_t    getX(void), getY(void), getZ(void);
+ 
  private:
 
   inline uint8_t  i2cread(void);
   inline void     i2cwrite(uint8_t x);
 
-  int32_t _sensorID;
-  range_t _range;
-  uint8_t _clk, _do, _di, _cs;
-  bool    _i2c;
+  uint16_t      _spi_mode;
+  range_t       _range;
+  dataRate_t    _dataRate;
+  uint8_t       _cs;
+  bool          _i2c;
+  uint8_t       _ofsx;
+  uint8_t       _ofsy;
+  uint8_t       _ofsz;
 };
