@@ -29,14 +29,14 @@
 #include <SPI.h>
 #include <Wire.h>
 
-#include "adxl345.h"
+#include "ADXL345.h"
 
 /**************************************************************************/
 /*!
     @brief  Abstract away platform differences in Arduino wire library
 */
 /**************************************************************************/
-inline uint8_t adxl345::i2cread(void) 
+inline uint8_t ADXL345::i2cread(void) 
 {
   #if ARDUINO >= 100
   return Wire.read();
@@ -50,7 +50,7 @@ inline uint8_t adxl345::i2cread(void)
     @brief  Abstract away platform differences in Arduino wire library
 */
 /**************************************************************************/
-inline void adxl345::i2cwrite(uint8_t x) 
+inline void ADXL345::i2cwrite(uint8_t x) 
 {
   #if ARDUINO >= 100
   Wire.write((uint8_t)x);
@@ -65,7 +65,7 @@ inline void adxl345::i2cwrite(uint8_t x)
     @brief  Writes 8-bits to the specified destination register
 */
 /**************************************************************************/
-void adxl345::writeRegister(uint8_t reg, uint8_t value) 
+void ADXL345::writeRegister(uint8_t reg, uint8_t value) 
 {
   if (_i2c) 
   {
@@ -88,7 +88,7 @@ void adxl345::writeRegister(uint8_t reg, uint8_t value)
     @brief  Reads 8-bits from the specified register
 */
 /**************************************************************************/
-uint8_t adxl345::readRegister(uint8_t reg) 
+uint8_t ADXL345::readRegister(uint8_t reg) 
 {
   if (_i2c) 
   {
@@ -114,7 +114,7 @@ uint8_t adxl345::readRegister(uint8_t reg)
     @brief  Reads 16-bits from the specified register
 */
 /**************************************************************************/
-int16_t adxl345::read16(uint8_t reg) 
+int16_t ADXL345::read16(uint8_t reg) 
 {
   if (_i2c) 
   {
@@ -140,7 +140,7 @@ int16_t adxl345::read16(uint8_t reg)
     @brief  Read the device ID (can be used to check connection)
 */
 /**************************************************************************/
-uint8_t adxl345::getDeviceID(void) 
+uint8_t ADXL345::getDeviceID(void) 
 {
   // Check device ID register
   return readRegister(ADXL345_REG_DEVID);
@@ -151,7 +151,7 @@ uint8_t adxl345::getDeviceID(void)
     @brief  Gets the most recent X axis value
 */
 /**************************************************************************/
-int16_t adxl345::getX(void) 
+int16_t ADXL345::getX(void) 
 {
   return read16(ADXL345_REG_DATAX0);
 }
@@ -161,7 +161,7 @@ int16_t adxl345::getX(void)
     @brief  Gets the most recent Y axis value
 */
 /**************************************************************************/
-int16_t adxl345::getY(void) 
+int16_t ADXL345::getY(void) 
 {
   return read16(ADXL345_REG_DATAY0);
 }
@@ -171,7 +171,7 @@ int16_t adxl345::getY(void)
     @brief  Gets the most recent Z axis value
 */
 /**************************************************************************/
-int16_t adxl345::getZ(void) 
+int16_t ADXL345::getZ(void) 
 {
   return read16(ADXL345_REG_DATAZ0);
 }
@@ -181,7 +181,7 @@ int16_t adxl345::getZ(void)
     @brief  Instantiates a new ADXL345 class with default setting
 */
 /**************************************************************************/
-adxl345::adxl345(commMode_t mode) 
+ADXL345::ADXL345(commMode_t mode) 
 {
   _i2c = (mode == _I2C) ? true : false;
 
@@ -209,7 +209,7 @@ adxl345::adxl345(commMode_t mode)
     @brief  Setups the HW (reads coefficients values, etc.)
 */
 /**************************************************************************/
-bool adxl345::begin() 
+bool ADXL345::begin() 
 { 
   if (_i2c)
     Wire.begin();
@@ -245,7 +245,7 @@ bool adxl345::begin()
     @brief  Sets the g range for the accelerometer
 */
 /**************************************************************************/
-void adxl345::setRange(range_t range)
+void ADXL345::setRange(range_t range)
 {
   writeRegister(ADXL345_REG_POWER_CTL, 0x00);
   uint8_t format = 0x00;
@@ -269,7 +269,7 @@ void adxl345::setRange(range_t range)
     @brief  Gets the g range for the accelerometer
 */
 /**************************************************************************/
-range_t adxl345::getRange(void)
+range_t ADXL345::getRange(void)
 {
   /* Read the data format register to preserve bits */
   return (range_t)(readRegister(ADXL345_REG_DATA_FORMAT) & 0x03);
@@ -280,7 +280,7 @@ range_t adxl345::getRange(void)
     @brief  Sets the data rate for the ADXL345 (controls power consumption)
 */
 /**************************************************************************/
-void adxl345::setDataRate(dataRate_t dataRate)
+void ADXL345::setDataRate(dataRate_t dataRate)
 {
   writeRegister(ADXL345_REG_POWER_CTL, 0x00);
   /* Note: The LOW_POWER bits are currently ignored and we always keep
@@ -303,7 +303,7 @@ void adxl345::setDataRate(dataRate_t dataRate)
     @brief  Gets the data rate for the ADXL345 (controls power consumption)
 */
 /**************************************************************************/
-dataRate_t adxl345::getDataRate(void)
+dataRate_t ADXL345::getDataRate(void)
 {
   return (dataRate_t)(readRegister(ADXL345_REG_BW_RATE) & 0x0F);
 }
@@ -313,7 +313,7 @@ dataRate_t adxl345::getDataRate(void)
     @brief  Sets the offset adjustments in the ADXL345
 */
 /**************************************************************************/
-void adxl345::setOffset(void)
+void ADXL345::setOffset(void)
 {
   writeRegister(ADXL345_REG_POWER_CTL, 0x00);
   writeRegister(ADXL345_REG_OFSX, _ofsx);
@@ -327,7 +327,7 @@ void adxl345::setOffset(void)
     @brief  Sets the CS pin(serial port enable line)
 */
 /**************************************************************************/
-void adxl345::setCS(uint8_t pinCS)
+void ADXL345::setCS(uint8_t pinCS)
 {
   this -> _cs = pinCS;
 }

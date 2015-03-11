@@ -109,10 +109,10 @@ typedef enum
   _I2C                        = 1
 } commMode_t;
 
-class adxl345
+class ADXL345
 {
  public:
-  adxl345(commMode_t mode);
+  ADXL345(commMode_t mode);
 
   bool       begin(void);
   void       setRange(range_t range);

@@ -15,12 +15,12 @@
 
 #include <Wire.h>
 #include <SPI.h>
-#include "adxl345.h"
+#include "ADXL345.h"
 #define HEADER_H (85 & 0xff)
 #define HEADER_L (170 & 0xff)
 
 
-adxl345 myAcc = adxl345(_SPI);
+ADXL345 myAcc = ADXL345(_SPI);
 int16_t ax, ay, az;
 void setup()
 {
@@ -28,10 +28,10 @@ void setup()
   Serial.begin(9600);
   if(!myAcc.begin())
   {
-    Serial.println("acc begin failed!");
+    Serial.println("ADXL345 begin failed!");
     while(1);
   }
-  Serial.println("acc begin ok!");
+  Serial.println("ADXL345 begin success!");
   
 }
 
